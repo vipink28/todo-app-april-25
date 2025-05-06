@@ -1,7 +1,9 @@
-import React from 'react'
-import TaskForm from '../components/TaskForm'
+import React, { useContext } from 'react';
+import TaskForm from '../components/TaskForm';
+import TaskContext from '../context/TaskContext';
 
 const CreateTask = () => {
+    const { latestTask, recentTasks } = useContext(TaskContext);
     return (
         <div className='container-fluid h-100'>
             <div className='row h-100'>
@@ -14,9 +16,27 @@ const CreateTask = () => {
                 </div>
 
                 <div className='col-lg-6 d-flex align-items-center justify-content-center h-100 flex-column'>
-                    <div className='card rounded-0 w-50'>
+                    <div className='card bg-primary text-white rounded-0 w-75'>
                         <div className='card-body'>
-
+                            <div className='d-flex align-items-center justify-content-between'>
+                                <h4>Latest Task</h4>
+                                <button className='btn btn-info'>Edit</button>
+                            </div>
+                            <div className='mt-4'>
+                                {
+                                    latestTask ?
+                                        <>
+                                            <h3>{latestTask.title}</h3>
+                                            <p>{latestTask.description}</p>
+                                            <div className='d-flex align-items-center justify-content-between'>
+                                                <p>Modified On: {latestTask.modifiedon}</p>
+                                                <p>Due Date: {latestTask.duedate}</p>
+                                            </div>
+                                        </>
+                                        :
+                                        <p>Please add a task</p>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
