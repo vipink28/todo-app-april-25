@@ -22,11 +22,32 @@ export const TaskProvider = ({ children }) => {
         try {
             const response = await fetch(`http://localhost:5001/tasks`, config);
             alert("Task added successfully")
+            getAllTasks(user.id);
 
         } catch (error) {
             console.log(error)
         }
     }
+
+    const updateTask = async (formData) => {
+        const config = {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData)
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5001/tasks/${formData.id}`, config);
+            alert("Task updated successfully");
+            getAllTasks(user.id);
+        } catch (error) {
+
+        }
+
+    }
+
 
     //get all tasks
 
@@ -53,7 +74,8 @@ export const TaskProvider = ({ children }) => {
             addTask,
             allTasks,
             recentTasks,
-            latestTask
+            latestTask,
+            updateTask
         }}>
             {children}
         </TaskContext.Provider>
