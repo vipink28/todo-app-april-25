@@ -1,11 +1,16 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../auth/AuthContext';
 import TaskContext from '../context/TaskContext';
 
-const TaskForm = () => {
-    const { addTask } = useContext(TaskContext);
+const TaskForm = ({ isUpdate, setIsUpdate, data, closeBtn }) => {
+    const init = {
+        title: "",
+        description: "",
+        duedate: ""
+    }
+    const { addTask, updateTask } = useContext(TaskContext);
     const { user } = useContext(AuthContext);
-    const [formData, setFormData] = useState(null);
+    const [formData, setFormData] = useState(init);
     const handleChange = (e) => {
         let { name, value } = e.target;
         setFormData((prev) => (
@@ -18,31 +23,55 @@ const TaskForm = () => {
         ))
     }
 
-    alert("changing style branch")
+    useEffect(() => {
+        if (isUpdate && data) {
+            setFormData(data);
+        }
+    }, [isUpdate, data])
+
 
     const handleSubmit = () => {
         addTask(formData)
     }
 
+    const handleUpdate = () => {
+        updateTask(formData)
+    }
+
+    const handleCancel = () => {
+        if (closeBtn) {
+            closeBtn.current.click();
+        } else {
+            setIsUpdate(false);
+        }
+    }
+
     return (
         <>
-            <h3 className='text-white'>Create Task</h3>
+            <h3 className='text-white'>{isUpdate ? "Update Task" : "Create Task"}</h3>
             <div className='mt-3 card'>
                 <div className='card-body'>
 
                     <div className='mb-3'>
                         <label className='form-label'>Title</label>
-                        <input type='text' name='title' className='form-control' onChange={handleChange} />
+                        <input type='text' name='title' className='form-control' value={formData.title} onChange={handleChange} />
                     </div>
                     <div className='mb-3'>
                         <label className='form-label'>Description</label>
-                        <textarea className='form-control' name='description' rows={6} onChange={handleChange} ></textarea>
+                        <textarea className='form-control' name='description' rows={6} value={formData.description} onChange={handleChange} ></textarea>
                     </div>
                     <div className='mb-3'>
                         <label className='form-label'>Due Date</label>
-                        <input type='datetime-local' className='form-control' name='duedate' onChange={handleChange} />
+                        <input type='datetime-local' className='form-control' value={formData.duedate} name='duedate' onChange={handleChange} />
                     </div>
-                    <button className='btn btn-primary' onClick={handleSubmit}>Add Task</button>
+                    {
+                        isUpdate ?
+                            <>
+                                <button className='btn btn-primary me-2' onClick={handleUpdate}>Update Task</button>
+                                <button className='btn btn-warning' onClick={handleCancel}>Cancel</button>
+                            </> :
+                            <button className='btn btn-primary' onClick={handleSubmit}>Add Task</button>
+                    }
                 </div>
             </div>
         </>
