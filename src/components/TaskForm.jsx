@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import AuthContext from '../auth/AuthContext';
 import TaskContext from '../context/TaskContext';
 
-const TaskForm = ({ isUpdate, setIsUpdate, data }) => {
+const TaskForm = ({ isUpdate, setIsUpdate, data, closeBtn }) => {
     const init = {
         title: "",
         description: "",
@@ -39,7 +39,11 @@ const TaskForm = ({ isUpdate, setIsUpdate, data }) => {
     }
 
     const handleCancel = () => {
-        setIsUpdate(false);
+        if (closeBtn) {
+            closeBtn.current.click();
+        } else {
+            setIsUpdate(false);
+        }
     }
 
     return (
